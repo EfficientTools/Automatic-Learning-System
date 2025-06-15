@@ -1,0 +1,37 @@
+# Configuration du Système d'Apprentissage Automatique
+
+# 📰 Flux RSS à surveiller
+rss_feeds:
+  - "https://feeds.feedburner.com/oreilly"
+  - "https://blog.pragmaticengineer.com/rss/"
+  - "https://martinfowler.com/feed.atom"
+  - "https://hbr.org/feed"
+  - "https://feeds.harvard.edu/blog/gazette"
+  - "https://news.ycombinator.com/rss"
+  # Ajoutez vos blogs/sites favoris ici
+
+# 🎥 IDs des chaînes YouTube pour les résumés de vidéos
+youtube_channels:
+  # Pour trouver l'ID de chaîne: aller sur la chaîne > voir le code source > chercher "channelId"
+  # Exemples (remplacez par de vrais IDs):
+  # - "UCxxxxxxx"  # Remplacer par de vrais IDs de chaînes
+  
+# 🤖 Configuration OpenAI pour les résumés IA
+openai:
+  api_key: ""  # À définir via variable d'environnement OPENAI_API_KEY
+  model: "gpt-4o-mini"  # Modèle économique mais performant
+
+# 📧 Configuration email Kindle
+kindle:
+  email: ""  # Votre adresse @kindle.com
+  sender_email: ""  # Votre adresse Gmail/email (doit être autorisée sur Amazon)
+  smtp_server: "smtp.gmail.com"
+  smtp_port: 587
+  smtp_password: ""  # Mot de passe d'application pour Gmail
+
+# ⚙️ Paramètres de sortie
+output:
+  output_dir: "output"
+  max_articles_per_feed: 3  # Maximum d'articles par flux RSS
+  max_video_summaries: 2    # Maximum de résumés de vidéos
+  days_lookback: 2          # Nombre de jours à regarder en arrière

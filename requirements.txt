@@ -1,0 +1,19 @@
+# Dépendances du Système d'Apprentissage Automatique
+
+# Traitement RSS et Web
+feedparser==6.0.10
+requests==2.31.0
+
+# IA et OpenAI
+openai==1.45.0
+
+# Génération PDF et QR codes
+reportlab==4.0.7
+qrcode[pil]==7.4.2
+
+# Configuration et dates
+PyYAML==6.0.1
+python-dateutil==2.8.2
+
+# Traitement d'images pour QR codes
+Pillow==10.1.0

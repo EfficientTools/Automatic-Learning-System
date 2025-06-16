@@ -1,0 +1,110 @@
+# Système d'Apprentissage Automatique - .gitignore
+
+# 🔐 Fichiers de configuration sensibles
+.env
+.env.local
+.env.production
+*.key
+config_local.yaml
+secrets.yaml
+
+# 🐍 Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# 🌐 Environnement virtuel
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# 📄 Fichiers générés
+output/
+*.pdf
+*.epub
+journal_*.pdf
+test_*.pdf
+
+# 📝 Logs et debug
+logs/
+*.log
+*.log.*
+debug.log
+error.log
+
+# 💾 Caches et tests
+.cache/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+.coverage.*
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+
+# 🔧 IDEs et éditeurs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.pydevproject
+
+# 📊 Jupyter Notebooks
+.ipynb_checkpoints
+
+# 🔍 Type checking
+.mypy_cache/
+.dmypi.json
+dmypy.json
+
+# 📱 Fichiers système
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# 🎯 Fichiers spécifiques au projet
+test_output/
+backup/
+archive/
+temp_*/
+debug_*
+
+# 📋 Fichiers temporaires
+*.tmp
+*.temp
+*.bak
+*~

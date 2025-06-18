@@ -11,7 +11,7 @@ rss_feeds:
   # Ajoutez vos blogs/sites favoris ici
 
 # 🎥 IDs des chaînes YouTube pour les résumés de vidéos
-youtube_channels:
+youtube_channels: []
   # Pour trouver l'ID de chaîne: aller sur la chaîne > voir le code source > chercher "channelId"
   # Exemples (remplacez par de vrais IDs):
   # - "UCxxxxxxx"  # Remplacer par de vrais IDs de chaînes

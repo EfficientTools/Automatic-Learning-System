@@ -167,6 +167,24 @@ def generate_qr_code(self, url: str) -> Image:
 - [ ] Intégration newsletters automatique
 - [ ] Support de plus de sources (Reddit, Hacker News)
 
+## 👨‍💻 Auteur
+
+[![Pierre-Henry Soria](https://s.gravatar.com/avatar/a210fe61253c43c869d71eaed0e90149?s=200)](https://PH7.me "Site personnel de Pierre-Henry Soria")
+
+**Pierre-Henry Soria** — Un ingénieur logiciel super passionné et enthousiaste.
+Un véritable amateur de fromage, café et chocolat. 🧀☕🍫
+Vous pouvez me contacter sur [PH7.me](https://PH7.me).
+
+Le projet vous plaît ? **[Offrez-moi un café](https://ko-fi.com/phenry)** — ma boisson de choix est un flat white aux amandes. ☕✨
+
+[![@phenrysay][x-icon]](https://x.com/phenrysay "Me suivre sur X")
+[![Vidéos Tech YouTube][youtube-icon]](https://www.youtube.com/@pH7Programming "Ma chaîne YouTube Tech")
+[![pH-7][github-icon]](https://github.com/pH-7 "Me suivre sur GitHub")
+
+## 📄 Licence
+
+Ce projet est distribué sous licence MIT. Voir le fichier [LICENSE.md](license.md) pour plus de détails.
+
 ## 🤝 Contribution
 
 Les contributions sont bienvenues ! N'hésitez pas à ouvrir une issue ou proposer une pull request.
@@ -174,3 +192,8 @@ Les contributions sont bienvenues ! N'hésitez pas à ouvrir une issue ou propos
 ---
 
 **🧠 Bon apprentissage automatique ! 📚✨**
+
+<!-- GitHub's Markdown reference links -->
+[x-icon]: https://img.shields.io/badge/x-000000?style=for-the-badge&logo=x
+[youtube-icon]: https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white
+[github-icon]: https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white

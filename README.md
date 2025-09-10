@@ -177,9 +177,7 @@ Vous pouvez me contacter sur [PH7.me](https://PH7.me).
 
 Le projet vous plaît ? **[Offrez-moi un café](https://ko-fi.com/phenry)** — ma boisson de choix est un flat white aux amandes. ☕✨
 
-[![@phenrysay][x-icon]](https://x.com/phenrysay "Me suivre sur X")
-[![Vidéos Tech YouTube][youtube-icon]](https://www.youtube.com/@pH7Programming "Ma chaîne YouTube Tech")
-[![pH-7][github-icon]](https://github.com/pH-7 "Me suivre sur GitHub")
+[![@phenrysay][x-icon]](https://x.com/phenrysay "Me suivre sur X") [![Vidéos Tech YouTube][youtube-icon]](https://www.youtube.com/@pH7Programming "Ma chaîne YouTube Tech") [![BlueSky][bsky-icon]](https://bsky.app/profile/ph7.me "Follow Me on BlueSky") [![pH-7][github-icon]](https://github.com/pH-7 "Me suivre sur GitHub")
 
 ## 📄 Licence
 
@@ -195,5 +193,6 @@ Les contributions sont bienvenues ! N'hésitez pas à ouvrir une issue ou propos
 
 <!-- GitHub's Markdown reference links -->
 [x-icon]: https://img.shields.io/badge/x-000000?style=for-the-badge&logo=x
+[bsky-icon]: https://img.shields.io/badge/BlueSky-00A8E8?style=for-the-badge&logo=bluesky&logoColor=white
 [youtube-icon]: https://img.shields.io/badge/YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white
 [github-icon]: https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white

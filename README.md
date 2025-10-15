@@ -177,7 +177,7 @@ Vous pouvez me contacter sur [PH7.me](https://PH7.me).
 
 Le projet vous plaît ? **[Offrez-moi un café](https://ko-fi.com/phenry)** — ma boisson de choix est un flat white aux amandes. ☕✨
 
-[![@phenrysay][x-icon]](https://x.com/phenrysay "Me suivre sur X") [![Vidéos Tech YouTube][youtube-icon]](https://www.youtube.com/@pH7Programming "Ma chaîne YouTube Tech") [![BlueSky][bsky-icon]](https://bsky.app/profile/ph7.me "Follow Me on BlueSky") [![pH-7][github-icon]](https://github.com/pH-7 "Me suivre sur GitHub")
+[![@phenrysay][x-icon]](https://x.com/phenrysay "Me suivre sur X") [![Vidéos Tech YouTube][youtube-icon]](https://www.youtube.com/@pH7Programming "Ma chaîne YouTube Tech") [![BlueSky][bsky-icon]](https://bsky.app/profile/pierrehenry.dev "Follow Me on BlueSky") [![pH-7][github-icon]](https://github.com/pH-7 "Me suivre sur GitHub")
 
 ## 📄 Licence
 

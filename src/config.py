@@ -6,22 +6,27 @@ import os
 from pathlib import Path
 from typing import List, Dict, Any
 import yaml
+from dotenv import load_dotenv
 
 class Config:
     """Classe de configuration pour le système d'apprentissage"""
     
-    def __init__(self, config_file: str = "config.yaml"):
-        self.config_file = Path(config_file)
+    def __init__(self, config_file: str | None = None):
+        self.config_file = (Path(config_file) if config_file else
+                            Path(__file__).resolve().parent.parent / "config.yaml")
+        load_dotenv(self.config_file.with_name('.env'), override=False)
         self.load_config()
     
     def load_config(self):
         """Charger la configuration depuis le fichier YAML"""
         if self.config_file.exists():
             with open(self.config_file, 'r', encoding='utf-8') as f:
-                self._config = yaml.safe_load(f)
+                self._config = yaml.safe_load(f) or {}
+            if not isinstance(self._config, dict):
+                raise ValueError("La configuration YAML doit être un objet")
         else:
             self._config = self.get_default_config()
-            self.save_config()
+
     
     def save_config(self):
         """Sauvegarder la configuration actuelle dans le fichier"""
@@ -43,15 +48,15 @@ class Config:
                 # Pour trouver l'ID: aller sur la chaîne > voir le code source > chercher "channelId"
             ],
             'openai': {
-                'api_key': os.getenv('OPENAI_API_KEY', ''),
+                'api_key': '',
                 'model': 'gpt-4o-mini'  # Modèle plus économique
             },
             'kindle': {
-                'email': os.getenv('KINDLE_EMAIL', ''),
-                'sender_email': os.getenv('SENDER_EMAIL', ''),
+                'email': '',
+                'sender_email': '',
                 'smtp_server': 'smtp.gmail.com',
                 'smtp_port': 587,
-                'smtp_password': os.getenv('SMTP_PASSWORD', '')
+                'smtp_password': ''
             },
             'output': {
                 'output_dir': 'output',
@@ -71,7 +76,7 @@ class Config:
     
     @property
     def openai_api_key(self) -> str:
-        return self._config.get('openai', {}).get('api_key', '')
+        return os.getenv('OPENAI_API_KEY', self._config.get('openai', {}).get('api_key', ''))
     
     @property
     def openai_model(self) -> str:
@@ -79,19 +84,23 @@ class Config:
     
     @property
     def kindle_email(self) -> str:
-        return self._config.get('kindle', {}).get('email', '')
+        return os.getenv('KINDLE_EMAIL', self._config.get('kindle', {}).get('email', ''))
     
     @property
     def sender_email(self) -> str:
-        return self._config.get('kindle', {}).get('sender_email', '')
+        return os.getenv('SENDER_EMAIL', self._config.get('kindle', {}).get('sender_email', ''))
     
     @property
     def smtp_config(self) -> Dict[str, Any]:
-        return self._config.get('kindle', {})
+        settings = {'smtp_server': 'smtp.gmail.com', 'smtp_port': 587,
+                    **self._config.get('kindle', {})}
+        return {**settings, 'sender_email': self.sender_email,
+                'smtp_password': os.getenv('SMTP_PASSWORD', settings.get('smtp_password', ''))}
     
     @property
     def output_dir(self) -> Path:
-        return Path(self._config.get('output', {}).get('output_dir', 'output'))
+        path = Path(self._config.get('output', {}).get('output_dir', 'output'))
+        return path if path.is_absolute() else self.config_file.parent / path
     
     @property
     def max_articles_per_feed(self) -> int:

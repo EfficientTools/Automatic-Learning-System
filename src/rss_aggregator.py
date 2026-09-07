@@ -64,6 +64,7 @@ class RSSAggregator:
             
             # Récupérer le flux avec un timeout
             response = requests.get(feed_url, headers=headers, timeout=10)
+            response.raise_for_status()
             feed = feedparser.parse(response.content)
         except Exception as e:
             print(f"⚠️ Erreur lors de la récupération du flux {feed_url}: {e}")

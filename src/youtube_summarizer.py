@@ -67,6 +67,7 @@ class YouTubeSummarizer:
                 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
             }
             response = requests.get(rss_url, headers=headers, timeout=10)
+            response.raise_for_status()
             feed = feedparser.parse(response.content)
         except Exception as e:
             print(f"⚠️ Échec du parsing du RSS YouTube pour la chaîne {channel_id}: {e}")

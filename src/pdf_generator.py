@@ -4,6 +4,7 @@ Génère un journal PDF formaté avec des QR codes pour chaque article
 """
 
 import qrcode
+from html import escape
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Image, Spacer, PageBreak, Table, TableStyle
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
@@ -22,7 +23,7 @@ class PDFGenerator:
     def __init__(self, config):
         self.config = config
         self.output_dir = config.output_dir
-        self.output_dir.mkdir(exist_ok=True)
+        self.output_dir.mkdir(parents=True, exist_ok=True)
     
     def create_journal(self, content_items: List) -> Path:
         """Créer un journal PDF avec tous les éléments de contenu"""
@@ -43,21 +44,21 @@ class PDFGenerator:
         styles = self.create_custom_styles()
         
         # Titre du journal
-        story.append(Paragraph(f"📚 Journal d'Apprentissage", styles['JournalTitle']))
+        story.append(Paragraph(f"Journal d'Apprentissage", styles['JournalTitle']))
         story.append(Paragraph(f"{datetime.now().strftime('%d %B %Y')}", styles['DateStyle']))
         story.append(Spacer(1, 20))
         
         # Résumé du contenu
-        story.append(Paragraph("📋 Contenu d'aujourd'hui", styles['SectionHeader']))
+        story.append(Paragraph("Contenu d'aujourd'hui", styles['SectionHeader']))
         
         # Compter les types de contenu
         articles_count = len([item for item in content_items if hasattr(item, 'source') and item.source != 'YouTube'])
         videos_count = len([item for item in content_items if hasattr(item, 'source') and item.source == 'YouTube'])
         
         summary_data = [
-            ['📰 Articles RSS', f'{articles_count} articles'],
-            ['🎥 Résumés vidéos', f'{videos_count} vidéos'],
-            ['📖 Total', f'{len(content_items)} éléments']
+            ['Articles RSS', f'{articles_count} articles'],
+            ['Résumés vidéos', f'{videos_count} vidéos'],
+            ['Total', f'{len(content_items)} éléments']
         ]
         
         summary_table = Table(summary_data, colWidths=[4*cm, 3*cm])
@@ -84,7 +85,7 @@ class PDFGenerator:
         # Footer avec informations
         story.append(Spacer(1, 30))
         story.append(Paragraph(
-            "🤖 Généré automatiquement par le Système d'Apprentissage Automatique", 
+            "Généré automatiquement par le Système d'Apprentissage Automatique",
             styles['Footer']
         ))
         
@@ -170,13 +171,13 @@ class PDFGenerator:
     def add_content_item(self, story: List, item, index: int, styles):
         """Ajouter un élément de contenu à l'histoire"""
         # Titre avec index
-        story.append(Paragraph(f"{index}. {item.title}", styles['ArticleTitle']))
+        story.append(Paragraph(f"{index}. {escape(item.title)}", styles['ArticleTitle']))
         
         # Informations sur la source et la date
         if hasattr(item, 'source') and item.source == 'YouTube':
-            source_info = f"🎥 {item.channel_name} | 📅 {item.published.strftime('%d/%m/%Y')}"
+            source_info = f"{escape(item.channel_name)} | {item.published.strftime('%d/%m/%Y')}"
         else:
-            source_info = f"📰 {item.source} | 📅 {item.published.strftime('%d/%m/%Y')}"
+            source_info = f"{escape(item.source)} | {item.published.strftime('%d/%m/%Y')}"
         
         story.append(Paragraph(source_info, styles['Metadata']))
         
@@ -192,7 +193,7 @@ class PDFGenerator:
             paragraphs = content_text.split('\n')
             for para in paragraphs:
                 if para.strip():
-                    story.append(Paragraph(para.strip(), styles['MainContent']))
+                    story.append(Paragraph(escape(para.strip()), styles['MainContent']))
         
         story.append(Spacer(1, 15))
         
@@ -200,7 +201,7 @@ class PDFGenerator:
         if hasattr(item, 'url') and item.url:
             # Créer une table pour aligner le QR code et le texte
             qr_image = self.generate_qr_code(item.url)
-            url_text = f"🔗 Scanner pour visiter:<br/><font size=8>{item.url}</font>"
+            url_text = f"Scanner pour visiter:<br/><font size=8>{escape(item.url)}</font>"
             
             qr_table = Table(
                 [[qr_image, Paragraph(url_text, styles['Metadata'])]],

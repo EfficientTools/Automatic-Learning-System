@@ -25,10 +25,10 @@ class PDFGenerator:
         self.output_dir = config.output_dir
         self.output_dir.mkdir(parents=True, exist_ok=True)
     
-    def create_journal(self, content_items: List) -> Path:
+    def create_journal(self, content_items: List, *, demo: bool = False) -> Path:
         """Créer un journal PDF avec tous les éléments de contenu"""
         today = datetime.now().strftime("%Y-%m-%d")
-        filename = f"journal_apprentissage_{today}.pdf"
+        filename = f"{'demo_' if demo else ''}journal_apprentissage_{today}.pdf"
         filepath = self.output_dir / filename
         
         doc = SimpleDocTemplate(
@@ -46,6 +46,8 @@ class PDFGenerator:
         # Titre du journal
         story.append(Paragraph(f"Journal d'Apprentissage", styles['JournalTitle']))
         story.append(Paragraph(f"{datetime.now().strftime('%d %B %Y')}", styles['DateStyle']))
+        if demo:
+            story.append(Paragraph('Démonstration : données et statistiques fictives.', styles['Metadata']))
         story.append(Spacer(1, 20))
         
         # Résumé du contenu

@@ -4,6 +4,7 @@ Envoie les PDFs générés vers Kindle via email
 """
 
 import smtplib
+import ssl
 from email.mime.multipart import MIMEMultipart
 from email.mime.base import MIMEBase
 from email.mime.text import MIMEText
@@ -76,15 +77,15 @@ Généré automatiquement par votre Système d'Apprentissage
             
             # Envoyer l'email
             print(f"📧 Connexion au serveur SMTP...")
-            server = smtplib.SMTP(smtp_config['smtp_server'], smtp_config['smtp_port'])
-            server.starttls()
+            server = smtplib.SMTP(smtp_config['smtp_server'], smtp_config['smtp_port'], timeout=30)
+            server.starttls(context=ssl.create_default_context())
             server.login(smtp_config['sender_email'], smtp_config['smtp_password'])
             
             print(f"📤 Envoi vers {self.config.kindle_email}...")
             server.send_message(msg)
             server.quit()
             
-            print(f"✅ Envoyé avec succès vers Kindle: {self.config.kindle_email}")
+            print(f"✅ Message accepté par le serveur SMTP pour: {self.config.kindle_email}")
             return True
             
         except smtplib.SMTPAuthenticationError:

@@ -5,7 +5,7 @@ Collecte et traite les flux RSS
 
 import feedparser
 import requests
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import List, Dict, Any
 from dataclasses import dataclass
 import time
@@ -77,16 +77,16 @@ class RSSAggregator:
         articles = []
         
         # Date limite (articles récents uniquement)
-        cutoff_date = datetime.now() - timedelta(days=self.config.days_lookback)
+        cutoff_date = datetime.now(timezone.utc) - timedelta(days=self.config.days_lookback)
         
         for entry in feed.entries[:self.config.max_articles_per_feed]:
             try:
                 # Parser la date de publication
-                published = datetime.now()
+                published = datetime.now(timezone.utc)
                 if hasattr(entry, 'published_parsed') and entry.published_parsed:
-                    published = datetime(*entry.published_parsed[:6])
+                    published = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
                 elif hasattr(entry, 'updated_parsed') and entry.updated_parsed:
-                    published = datetime(*entry.updated_parsed[:6])
+                    published = datetime(*entry.updated_parsed[:6], tzinfo=timezone.utc)
                 
                 # Ignorer les articles trop anciens
                 if published < cutoff_date:

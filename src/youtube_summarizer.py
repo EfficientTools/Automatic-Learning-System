@@ -6,7 +6,7 @@ Traite les flux RSS YouTube et génère des résumés IA
 import feedparser
 import requests
 from openai import OpenAI
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import List, Dict, Any
 from dataclasses import dataclass
 import re
@@ -80,14 +80,14 @@ class YouTubeSummarizer:
         summaries = []
         
         # Date limite (vidéos récentes uniquement)
-        cutoff_date = datetime.now() - timedelta(days=self.config.days_lookback)
+        cutoff_date = datetime.now(timezone.utc) - timedelta(days=self.config.days_lookback)
         
         for entry in feed.entries[:2]:  # Max 2 vidéos par chaîne
             try:
                 # Parser la date de publication
-                published = datetime.now()
+                published = datetime.now(timezone.utc)
                 if hasattr(entry, 'published_parsed') and entry.published_parsed:
-                    published = datetime(*entry.published_parsed[:6])
+                    published = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
                 
                 # Ignorer les vidéos trop anciennes
                 if published < cutoff_date:

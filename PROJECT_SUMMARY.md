@@ -1,5 +1,9 @@
 # 🎯 SYSTÈME D'APPRENTISSAGE AUTOMATIQUE - RÉSUMÉ FINAL
 
+> Document de conception historique. Voir README pour le périmètre vérifié :
+> notes de métadonnées YouTube, tests hors ligne et livraison Kindle non vérifiée.
+
+
 ## ✅ Projet Complètement Fonctionnel
 
 Votre système d'apprentissage automatique est maintenant **100% opérationnel** et prêt à générer des journaux personnalisés quotidiens !

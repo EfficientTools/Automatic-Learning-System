@@ -2,6 +2,39 @@
 
 Un système intelligent qui génère automatiquement un journal d'apprentissage personnalisé quotidien et l'envoie directement sur votre Kindle.
 
+
+## État vérifié
+
+Python **3.12** est l'environnement testé. `setup.sh` installe `requirements.lock`,
+préserve `.env` et les scripts existants, puis propose des commandes explicites.
+Les variables exportées sont prioritaires sur `.env`, puis sur YAML. Les secrets
+restent dans l'environnement; les valeurs par défaut sauvegardées ne les copient
+pas dans `config.yaml`.
+
+```bash
+venv/bin/python test_system.py  # 12 régressions hors ligne
+venv/bin/python verify.py       # présence des fichiers et imports uniquement
+venv/bin/python demo.py         # PDF fictif séparé du vrai journal quotidien
+```
+
+La commande réelle `venv/bin/python main.py` contacte les flux configurés et peut
+utiliser OpenAI puis envoyer un email si les identifiants sont renseignés. Ne
+l'utilisez pas comme simple test. Aucun envoi ni automatisation n'est installé
+par `setup.sh`. Un message accepté par SMTP ne prouve pas sa réception sur Kindle.
+
+Les notes YouTube utilisent seulement le **titre et la description RSS**, pas la
+transcription ou le contenu vidéo. Vérifiez les faits avant utilisation. Les
+articles RSS sont des extraits, pas une analyse complète des sources.
+
+Validation locale : 12 tests, contrôle des dépendances, scripts shell et démo
+PDF de six pages inspectée. Aucun appel réel OpenAI/SMTP ni livraison Kindle
+vérifié. La mise en page reste A4 avec une page par élément; elle n'est pas validée
+sur Kindle. Helvetica couvre le texte français de la démo, mais pas tous les
+caractères Unicode possibles dans des flux tiers. Aucun workflow CI n'est encore
+configuré.
+
+[Capture historique de la démo (juin 2025)](demo/screenshots/daily-learning-plan-script-generation.png)
+
 ## 🎯 Fonctionnalités
 
 - **📰 Agrégation RSS** - Collecte les articles de vos flux préférés
@@ -14,7 +47,7 @@ Un système intelligent qui génère automatiquement un journal d'apprentissage 
 
 ```bash
 # Cloner et configurer
-git clone <votre-repo> learning-system
+git clone https://github.com/EfficientTools/Automatic-Learning-System.git learning-system
 cd learning-system
 
 # Exécuter la configuration automatique
@@ -22,14 +55,14 @@ chmod +x setup.sh
 ./setup.sh
 
 # Configurer vos identifiants
-cp .env.template .env
+test -f .env || cp .env.template .env
 # Éditer .env avec vos clés API et emails
 
 # Tester le système
-python test_system.py
+venv/bin/python test_system.py
 
 # Lancer la génération
-python main.py
+venv/bin/python main.py
 ```
 
 ## 🔧 Configuration
@@ -69,17 +102,17 @@ chmod +x run_daily.sh
 crontab -e
 
 # Ajouter cette ligne:
-0 7 * * * /Users/pierre-henrysoria/Code/learning-system/run_daily.sh
+0 7 * * * /chemin/vers/learning-system/run_daily.sh
 ```
 
-## 📱 Applications RSS Recommandées
+## 📱 Exemples historiques de lecteurs RSS
 
 Pour lire vos flux sur macOS et iPad:
 
-### 🏆 **Reeder 5** (Recommandé)
+### **Reeder 5**
 - App native macOS/iPad
 - Interface élégante sans distraction
-- Achat unique, pas d'abonnement
+- Conditions commerciales à vérifier auprès de l’éditeur
 - Synchronisation via iCloud/Feedbin
 
 ### 🆓 **NetNewsWire**
@@ -91,7 +124,7 @@ Pour lire vos flux sur macOS et iPad:
 - Résumés IA intégrés
 - Gestion newsletters + RSS + PDF
 - Envoi automatique vers Kindle
-- Abonnement ~10€/mois
+- Tarifs actuels à vérifier auprès de l’éditeur
 
 ## 🛠️ Structure du Projet
 
@@ -120,7 +153,7 @@ Le PDF généré contient:
 - **Articles RSS** avec source et date
 - **Résumés vidéos IA** en français
 - **QR codes** pour chaque source
-- **Mise en page optimisée** pour Kindle
+- **Mise en page A4** à vérifier sur votre liseuse
 
 ## 🔍 Comment Inclure les QR Codes
 

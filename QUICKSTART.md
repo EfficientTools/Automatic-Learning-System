@@ -3,7 +3,7 @@
 ## Étape 1 : Installation
 ```bash
 # Cloner le projet (si nécessaire)
-git clone <votre-repo> learning-system
+git clone https://github.com/EfficientTools/Automatic-Learning-System.git learning-system
 cd learning-system
 
 # Installer automatiquement
@@ -25,7 +25,7 @@ rss_feeds:
 1. Obtenez une clé API sur https://platform.openai.com/api-keys
 2. Créez le fichier `.env` :
 ```bash
-cp .env.template .env
+test -f .env || cp .env.template .env
 # Éditez .env et ajoutez votre clé
 ```
 
@@ -38,10 +38,10 @@ cp .env.template .env
 ## Étape 3 : Premier Test
 ```bash
 # Tester la configuration
-python test_system.py
+venv/bin/python test_system.py
 
 # Générer votre premier journal
-python main.py
+venv/bin/python main.py
 ```
 
 ## Étape 4 : Automatisation (Optionnel)
@@ -50,7 +50,7 @@ python main.py
 crontab -e
 
 # Ajouter cette ligne :
-0 7 * * * /Users/pierre-henrysoria/Code/learning-system/run_daily.sh
+0 7 * * * /chemin/vers/learning-system/run_daily.sh
 ```
 
 ## 🎯 Résultat

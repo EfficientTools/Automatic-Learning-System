@@ -23,16 +23,16 @@ def main():
     """Fonction principale pour orchestrer le système d'apprentissage"""
     print("🧠 Démarrage du Système d'Apprentissage Automatique...")
     
-    # Initialiser la configuration
-    config = Config()
-    
-    # Initialiser les composants
-    rss_aggregator = RSSAggregator(config)
-    youtube_summarizer = YouTubeSummarizer(config)
-    pdf_generator = PDFGenerator(config)
-    kindle_sender = KindleSender(config)
-    
     try:
+        # Initialiser la configuration
+        config = Config()
+
+        # Initialiser les composants
+        rss_aggregator = RSSAggregator(config)
+        youtube_summarizer = YouTubeSummarizer(config)
+        pdf_generator = PDFGenerator(config)
+        kindle_sender = KindleSender(config)
+
         # Étape 1: Collecter les articles RSS
         print("📰 Collecte des articles RSS...")
         articles = rss_aggregator.collect_articles()
@@ -59,10 +59,12 @@ def main():
         success = kindle_sender.send_to_kindle(pdf_path)
         
         if success:
-            print("✅ Journal quotidien envoyé avec succès vers Kindle!")
+            print("✅ Message accepté par le serveur SMTP; réception Kindle non vérifiée.")
         else:
             print("⚠️ Erreur lors de l'envoi vers Kindle, mais le PDF est disponible localement")
             print(f"📁 Fichier généré: {pdf_path}")
+            if config.kindle_email and config.sender_email:
+                return 1
         
     except Exception as e:
         print(f"❌ Erreur: {e}")

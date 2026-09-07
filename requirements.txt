@@ -2,10 +2,10 @@
 
 # Traitement RSS et Web
 feedparser==6.0.10
-requests==2.31.0
+requests==2.33.0
 
 # IA et OpenAI
-openai==1.45.0
+openai==1.55.3
 
 # Génération PDF et QR codes
 reportlab==4.0.7
@@ -16,4 +16,7 @@ PyYAML==6.0.1
 python-dateutil==2.8.2
 
 # Traitement d'images pour QR codes
-Pillow==10.1.0
+Pillow==12.3.0
+
+# Chargement explicite du fichier .env local
+python-dotenv==1.2.2

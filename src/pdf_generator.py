@@ -183,12 +183,12 @@ class PDFGenerator:
         
         story.append(Paragraph(source_info, styles['Metadata']))
         
-        # Contenu principal
-        content_text = ""
-        if hasattr(item, 'summary') and item.summary:
-            content_text = item.summary
-        elif hasattr(item, 'content') and item.content:
-            content_text = item.content
+        # Contenu principal: préférer le texte le plus complet. Le résumé d'un
+        # article n'est qu'une troncature de son contenu, alors que celui d'une
+        # vidéo est rédigé par l'IA et constitue la seule source disponible.
+        summary_text = getattr(item, 'summary', '') or ''
+        full_text = getattr(item, 'content', '') or ''
+        content_text = full_text if len(full_text) > len(summary_text) else summary_text
         
         if content_text:
             # Diviser le contenu en paragraphes si nécessaire

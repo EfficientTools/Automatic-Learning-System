@@ -1,0 +1,43 @@
+name: tests
+
+# Les régressions sont hors ligne: aucun secret, aucun appel RSS, OpenAI ou SMTP.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: requirements.lock
+
+      - name: Installer les dépendances verrouillées
+        run: python -m pip install -r requirements.lock
+
+      - name: Vérifier la structure et les imports
+        run: python verify.py
+
+      - name: Régressions hors ligne
+        run: python test_system.py
+
+      - name: Générer le PDF de démonstration
+        run: python demo.py
+
+      - name: Conserver le PDF de démonstration
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo-journal
+          path: output/demo_journal_*.pdf
+          if-no-files-found: error
+          retention-days: 7

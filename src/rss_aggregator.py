@@ -11,6 +11,7 @@ from dataclasses import dataclass
 import time
 import re
 import html
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 @dataclass
 class Article:
@@ -50,9 +51,19 @@ class RSSAggregator:
         # Trier par date de publication (plus récent en premier)
         all_articles.sort(key=lambda x: x.published, reverse=True)
         
-        # Limiter le nombre total d'articles
-        max_total = self.config.max_articles_per_feed * len(self.config.rss_feeds)
-        return all_articles[:max_total]
+        # Écarter les doublons: un même lien revient souvent via plusieurs flux
+        # (agrégateurs). Le tri ci-dessus garde la version la plus récente.
+        unique_articles = []
+        seen_urls = set()
+        for article in all_articles:
+            key = self.normalise_url(article.url)
+            if key in seen_urls:
+                print(f"↔️ Doublon ignoré: {article.title}")
+                continue
+            seen_urls.add(key)
+            unique_articles.append(article)
+        
+        return unique_articles
     
     def process_feed(self, feed_url: str) -> List[Article]:
         """Traiter un seul flux RSS"""
@@ -80,19 +91,16 @@ class RSSAggregator:
         # Date limite (articles récents uniquement)
         cutoff_date = datetime.now(timezone.utc) - timedelta(days=self.config.days_lookback)
         
-        for entry in feed.entries[:self.config.max_articles_per_feed]:
+        # Filtrer sur la date avant de limiter: certains flux ne sont pas triés
+        # par date et épinglent d'anciennes entrées en tête.
+        recent_entries = []
+        for entry in feed.entries:
+            published = self.parse_published(entry)
+            if published >= cutoff_date:
+                recent_entries.append((entry, published))
+        
+        for entry, published in recent_entries[:self.config.max_articles_per_feed]:
             try:
-                # Parser la date de publication
-                published = datetime.now(timezone.utc)
-                if hasattr(entry, 'published_parsed') and entry.published_parsed:
-                    published = datetime(*entry.published_parsed[:6], tzinfo=timezone.utc)
-                elif hasattr(entry, 'updated_parsed') and entry.updated_parsed:
-                    published = datetime(*entry.updated_parsed[:6], tzinfo=timezone.utc)
-                
-                # Ignorer les articles trop anciens
-                if published < cutoff_date:
-                    continue
-                
                 # Obtenir le contenu
                 content = self.extract_content(entry)
                 
@@ -115,6 +123,34 @@ class RSSAggregator:
                 continue
         
         return articles
+    
+    def normalise_url(self, url: str) -> str:
+        """Normaliser une URL pour comparer deux liens équivalents"""
+        if not url:
+            return ""
+        
+        cleaned = url.strip()
+        
+        # Ignorer la casse du schéma et du domaine, ainsi qu'un slash final
+        parts = urlsplit(cleaned)
+        path = parts.path.rstrip('/') or '/'
+        
+        # Retirer les paramètres de suivi, qui diffèrent d'un flux à l'autre
+        query = urlencode([(name, value) for name, value in parse_qsl(parts.query)
+                           if not name.lower().startswith('utm_')
+                           and name.lower() not in {'fbclid', 'gclid', 'ref', 'source'}])
+        
+        return urlunsplit((parts.scheme.lower(), parts.netloc.lower(), path, query, ''))
+    
+    def parse_published(self, entry) -> datetime:
+        """Lire la date de publication d'une entrée, en UTC"""
+        for attribute in ('published_parsed', 'updated_parsed'):
+            value = getattr(entry, attribute, None)
+            if value:
+                return datetime(*value[:6], tzinfo=timezone.utc)
+        
+        # Sans date exploitable, considérer l'entrée comme actuelle
+        return datetime.now(timezone.utc)
     
     def extract_content(self, entry) -> str:
         """Extraire le contenu de l'entrée RSS"""

@@ -12,7 +12,7 @@ restent dans l'environnement; les valeurs par défaut sauvegardées ne les copie
 pas dans `config.yaml`.
 
 ```bash
-venv/bin/python test_system.py  # 12 régressions hors ligne
+venv/bin/python test_system.py  # 16 régressions hors ligne
 venv/bin/python verify.py       # présence des fichiers et imports uniquement
 venv/bin/python demo.py         # PDF fictif séparé du vrai journal quotidien
 ```
@@ -26,7 +26,7 @@ Les notes YouTube utilisent seulement le **titre et la description RSS**, pas la
 transcription ou le contenu vidéo. Vérifiez les faits avant utilisation. Les
 articles RSS sont des extraits, pas une analyse complète des sources.
 
-Validation locale : 12 tests, contrôle des dépendances, scripts shell et démo
+Validation locale : 16 tests, contrôle des dépendances, scripts shell et démo
 PDF de six pages inspectée. Aucun appel réel OpenAI/SMTP ni livraison Kindle
 vérifié. La mise en page reste A4 avec une page par élément; elle n'est pas validée
 sur Kindle. Helvetica couvre le texte français de la démo, mais pas tous les

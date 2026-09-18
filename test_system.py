@@ -6,15 +6,17 @@ import ssl
 import tempfile
 import unittest
 from contextlib import redirect_stdout
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
+from reportlab.platypus import Paragraph
+
 from src.config import Config
 from src.pdf_generator import PDFGenerator
 from src.rss_aggregator import Article, RSSAggregator
-from src.youtube_summarizer import YouTubeSummarizer
+from src.youtube_summarizer import VideoSummary, YouTubeSummarizer
 from src.kindle_sender import KindleSender
 import main as application
 
@@ -99,6 +101,52 @@ class LearningSystemTests(unittest.TestCase):
             articles = RSSAggregator(self.config()).process_feed('https://example.invalid/rss')
         self.assertEqual(len(articles), 1)
         self.assertEqual(articles[0].published.tzinfo, timezone.utc)
+
+    def test_duplicate_links_across_feeds_appear_once(self):
+        self.config_path.write_text(
+            'rss_feeds:\n  - https://example.invalid/a\n  - https://example.invalid/b\n')
+        date = datetime.now(timezone.utc).strftime('%a, %d %b %Y %H:%M:%S GMT')
+        feed = ('<rss version="2.0"><channel><title>Test</title><item><title>Shared</title>'
+                '<link>https://example.invalid/post?utm_source=feed</link>'
+                f'<pubDate>{date}</pubDate><description>Text</description></item>'
+                '</channel></rss>').encode()
+        with patch('src.rss_aggregator.requests.get', return_value=MagicMock(content=feed)), \
+             patch('src.rss_aggregator.time.sleep'), redirect_stdout(io.StringIO()):
+            articles = RSSAggregator(self.config()).collect_articles()
+        self.assertEqual(len(articles), 1)
+
+    def test_recent_entries_survive_a_pinned_older_entry(self):
+        old = (datetime.now(timezone.utc) - timedelta(days=400)).strftime('%a, %d %b %Y %H:%M:%S GMT')
+        new = datetime.now(timezone.utc).strftime('%a, %d %b %Y %H:%M:%S GMT')
+        items = ''.join(
+            f'<item><title>Pinned {index}</title><link>https://example.invalid/old{index}</link>'
+            f'<pubDate>{old}</pubDate><description>Old</description></item>' for index in range(3))
+        feed = ('<rss version="2.0"><channel><title>Test</title>' + items +
+                '<item><title>Recent</title><link>https://example.invalid/new</link>'
+                f'<pubDate>{new}</pubDate><description>Fresh</description></item>'
+                '</channel></rss>').encode()
+        with patch('src.rss_aggregator.requests.get', return_value=MagicMock(content=feed)):
+            articles = RSSAggregator(self.config()).process_feed('https://example.invalid/rss')
+        self.assertEqual([article.title for article in articles], ['Recent'])
+
+    def test_pdf_renders_article_content_rather_than_its_truncation(self):
+        body = 'Phrase unique. ' + 'corps ' * 200
+        article = Article('Titre', body, 'https://example.invalid/a',
+                          datetime.now(), 'Source', summary=body[:200] + '...')
+        generator = PDFGenerator(self.config())
+        story, styles = [], generator.create_custom_styles()
+        generator.add_content_item(story, article, 1, styles)
+        rendered = ' '.join(item.text for item in story if isinstance(item, Paragraph))
+        self.assertIn(body.strip(), rendered)
+
+    def test_pdf_still_uses_the_ai_summary_for_videos(self):
+        video = VideoSummary('Titre', 'Résumé rédigé par le modèle.', 'https://example.invalid/v',
+                             datetime.now(), 'YouTube', 'Chaîne')
+        generator = PDFGenerator(self.config())
+        story, styles = [], generator.create_custom_styles()
+        generator.add_content_item(story, video, 1, styles)
+        rendered = ' '.join(item.text for item in story if isinstance(item, Paragraph))
+        self.assertIn('Résumé rédigé par le modèle.', rendered)
 
     def test_smtp_uses_verified_tls_with_a_timeout(self):
         pdf = self.root / 'test.pdf'; pdf.write_bytes(b'%PDF-test')

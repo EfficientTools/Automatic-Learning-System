@@ -30,8 +30,9 @@ Validation locale : 16 tests, contrôle des dépendances, scripts shell et démo
 PDF de six pages inspectée. Aucun appel réel OpenAI/SMTP ni livraison Kindle
 vérifié. La mise en page reste A4 avec une page par élément; elle n'est pas validée
 sur Kindle. Helvetica couvre le texte français de la démo, mais pas tous les
-caractères Unicode possibles dans des flux tiers. Aucun workflow CI n'est encore
-configuré.
+caractères Unicode possibles dans des flux tiers. GitHub Actions rejoue ces
+vérifications hors ligne sur chaque push et pull request; aucun envoi réel n'y
+est testé.
 
 [Capture historique de la démo (juin 2025)](demo/screenshots/daily-learning-plan-script-generation.png)
 
